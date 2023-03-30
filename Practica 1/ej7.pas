@@ -8,6 +8,7 @@ type
     end;
 
     archivo = file of novelas;
+    archivo_txt = TextFile;
 
 procedure crearNovela (var n: novelas);
 begin
@@ -21,7 +22,7 @@ begin
     readln(n.precio);
 end;
 
-procedure cargarArchivo (var arc_logico: archivo; var arc_carga: archivo);
+procedure cargarArchivo (var arc_logico: archivo; var arc_carga: archivo_txt);
 var
 n: novelas;
 begin
@@ -31,8 +32,9 @@ begin
         write('El archivo no tiene contenido');
     end
     else begin
-        while not Eof(arc_logico) do begin
-            read(arc_carga, n);
+        while not Eof(arc_carga) do begin
+            readln(arc_carga, n.codigo, n.precio, n.genero);
+            readln(arc_carga, n.nombre);
             write(arc_logico, n);
         end;
     end;
@@ -40,7 +42,7 @@ begin
     close(arc_carga);
 end;
 
-procedure crearArchivo(var arc_logico: archivo; var arc_carga: archivo);
+procedure crearArchivo(var arc_logico: archivo; var arc_carga: archivo_txt);
 var
     arc_fisico: string;
 begin
@@ -104,10 +106,10 @@ procedure agregarNovela (var arc_logico: archivo);
 var
 n: novelas;
 begin
-    crearNovela(n);
     while not Eof(arc_logico) do begin
         read(arc_logico, n);
     end;
+    crearNovela(n);
     write(arc_logico, n);
     close(arc_logico);
 end;
@@ -116,11 +118,14 @@ procedure imprimirArchivo (var arc_logico: archivo);
 var
 arc_fisico: string;
 n: novelas;
-begin
-    writeln ('Ingrese el nombre del archivo a modificar:'); //debemos preguntar siempre por el nombre a la hora de modificar?
+begin 
+    writeln ('Ingrese el nombre del archivo a imprimir:'); //debemos preguntar siempre por el nombre a la hora de modificar?
     readln (arc_fisico);
     assign (arc_logico, arc_fisico);
     reset (arc_logico);
+    if Eof(arc_logico) then begin
+        writeln('El archivo esta vacio');
+    end;
     while not Eof(arc_logico) do begin
         read(arc_logico, n);
         writeln(n.codigo, n.nombre, n.genero, n.precio);
@@ -148,7 +153,7 @@ end;
 
 var
 arc_logico: archivo;
-arc_carga: archivo;
+arc_carga: archivo_txt;
 opcion: integer;
 begin
 writeln('Ingrese 1 para crear el archivo, o 2 para para abrir el archivo ya creado o 3 para imprimir el archivo:');

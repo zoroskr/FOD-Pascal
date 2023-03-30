@@ -1,23 +1,29 @@
-Program Generar_Archivo;
-type
-    novelas = record
-        codigo: integer;
-        nombre: string;
-        genero: string;
-        precio: real;
-    end;
+program crearArchivo;
+var
+  archivo: TextFile;
+  codigo, precio: integer;
+  genero, nombre: string;
 
-    archivo = file of novelas;
-var 
-  arc_logico: archivo; {variable que define el nombre lógico del archivo}
-  c: novelas; {nro será utilizada para obtener la información de teclado}
 begin
-  assign( arc_logico, 'novelas.txt');
-  rewrite( arc_logico ); { se crea el archivo }
-  c.codigo:= 12356;
-  c.nombre:= 'Jorge';
-  c.genero:= 'Cremades';
-  c.precio:= 3.10;
-  write( arc_logico, c); { se escribe en el archivo cada número }
-  close( arc_logico ); { se cierra el archivo abierto oportunamente con la instrucción rewrite }
+  assign(archivo, 'novelas.txt');
+  rewrite(archivo);
+
+  // escribir la información de la novela en dos líneas
+  codigo := 1;
+  precio := 100;
+  genero := 'Romance';
+  nombre := 'El amor en los tiempos del cólera';
+  writeln(archivo, codigo, ' ', precio, ' ', genero);
+  writeln(archivo, nombre);
+
+  codigo := 2;
+  precio := 150;
+  genero := 'Ficción';
+  nombre := 'Rayuela';
+  writeln(archivo, codigo, ' ', precio, ' ', genero);
+  writeln(archivo, nombre);
+
+  // ... agregar más novelas
+
+  close(archivo);
 end.

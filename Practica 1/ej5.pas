@@ -10,6 +10,7 @@ type
         stock_disp: integer;
     end;
     archivo = file of celulares;
+    archivo_txt = TextFile;
 
 procedure abrirArchivo(var arc_fisico: string; var arc_logico: archivo);
 begin
@@ -80,12 +81,12 @@ begin
      readln (c.stock_min);
      writeln('Ingrese stock disponible');
      readln (c.stock_disp);
-     write( arc_logico, c);
+     write(arc_logico, c);
      close(arc_logico);
 end;
 
 
-procedure cargarArchivo(var arc_logico: archivo; var arc_carga: archivo);
+procedure cargarArchivo(var arc_logico: archivo; var arc_carga: archivo_txt);
 var
     c: celulares;
 begin
@@ -95,16 +96,19 @@ begin
     begin
         write('El archivo esta vacio');
     end
-    else
+    else begin
     while not Eof(arc_carga) do begin
-        read(arc_carga, c);
+        readln(arc_carga, c.codigo, c.precio, c.marca);
+        readln(arc_carga, c.stock_disp, c.stock_min, c.descripcion);
+        readln(arc_carga, c.nombre);
         write(arc_logico, c);
+    end;
     end;
     close(arc_carga);
     close(arc_logico);
 end;
 
-procedure crearArchivo(var arc_logico: archivo; var arc_carga: archivo; var arc_fisico: string);
+procedure crearArchivo(var arc_logico: archivo; var arc_carga: archivo_txt; var arc_fisico: string);
 begin
     writeln ('Ingrese el nombre del archivo:');
     readln (arc_fisico);
@@ -147,23 +151,25 @@ begin
     close(arc_logico); 
 end;
 
-procedure exportarArchivo (var arc_logico: archivo; var arc_logico3: archivo);
+procedure exportarArchivo (var arc_logico: archivo; var arc_logico3: archivo_txt);
 var
 c: celulares;
 arc_fisico: string;
 begin
     abrirArchivo(arc_fisico, arc_logico);
     assign (arc_logico3, 'celulares.txt');
-    reset (arc_logico3);
+    rewrite (arc_logico3);
     while not Eof(arc_logico) do begin
-         read (arc_logico, c);
-         write (arc_logico3, c);
+        read (arc_logico, c);
+        writeln(arc_logico3, c.codigo, ' ', c.precio, ' ', c.marca);
+        writeln(arc_logico3, c.stock_disp, ' ', c.stock_min, ' ', c.descripcion);
+        writeln(arc_logico3, c.nombre);
     end;
     close(arc_logico);
     close(arc_logico3);
 end;
 
-procedure exportarSinStock (var arc_logico: archivo; var arc_logico4: archivo);
+procedure exportarSinStock (var arc_logico: archivo; var arc_logico4: archivo_txt);
 var
 c: celulares;
 arc_fisico: string;
@@ -174,7 +180,9 @@ begin
     while not Eof(arc_logico) do begin
          read (arc_logico, c);
          if (c.stock_disp = 0) then begin
-            write (arc_logico4, c);
+             writeln(arc_logico4, c.codigo, ' ', c.precio, ' ', c.marca);
+             writeln(arc_logico4, c.stock_disp, ' ', c.stock_min, ' ', c.descripcion);
+             writeln(arc_logico4, c.nombre);
          end;
     end;
     close(arc_logico);
@@ -183,7 +191,7 @@ end;
 
 
 
-procedure menuInfo (var arc_logico: archivo; var arc_carga: archivo; var arc_logico3: archivo; var arc_fisico: string; var arc_logico4: archivo);
+procedure menuInfo (var arc_logico: archivo; var arc_carga: archivo_txt; var arc_logico3: archivo_txt; var arc_fisico: string; var arc_logico4: archivo_txt);
 var
 o: integer;
 begin
@@ -200,10 +208,10 @@ begin
 end;
 var
 arc_logico: archivo;
-arc_logico3: archivo;
-arc_carga: archivo;
+arc_logico3: archivo_txt;
+arc_carga: archivo_txt;
 arc_fisico: string;
-arc_logico4: archivo;
+arc_logico4: archivo_txt;
 begin
     menuInfo(arc_logico, arc_carga, arc_logico3, arc_fisico, arc_logico4);
 end.
