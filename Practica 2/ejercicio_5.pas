@@ -86,3 +86,15 @@ begin
     end;
 end;
 
+procedure actualizar_maestro (var arc_maestro: maestro; var arc_fall: fall);
+var
+f: fallecimientos;
+begin
+    reset (arc_maestro);
+    reset (arc_fall);
+    leer_fall (arc_fall, f);
+    while (n.nro_partida <> val_alto) do begin
+        
+
+
+end;
